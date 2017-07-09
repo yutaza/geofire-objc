@@ -93,19 +93,18 @@ withCompletionBlock:(GFCompletionBlock)block
         NSString *geoHash = [GFGeoHash newWithLocation:location.coordinate].geoHashValue;
         value = @{ @"l": @[ lat, lng ], @"g": geoHash };
         priority = geoHash;
+
+        [[self.firebaseRef child:@"g"] setValue:geoHash];
+        [[self.firebaseRef child:@"l"] setValue:@[ lat, lng ]];
     } else {
         value = nil;
         priority = nil;
     }
-    [[self firebaseRefForLocationKey:key] setValue:value
-                                       andPriority:priority
-                               withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
-        if (block != nil) {
-            dispatch_async(self.callbackQueue, ^{
-                block(error);
-            });
-        }
-    }];
+    if (block != nil) {
+        dispatch_async(self.callbackQueue, ^{
+            block(nil);
+        });
+    }
 }
 
 - (void)removeKey:(NSString *)key
