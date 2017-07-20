@@ -198,8 +198,8 @@
 
 - (FIRDatabaseQuery *)firebaseForGeoHashQuery:(GFGeoHashQuery *)query
 {
-    return [[[self.geoFire.firebaseRef queryOrderedByChild:@"g"] queryStartingAtValue:query.startValue]
-            queryEndingAtValue:query.endValue];
+    return [[[[self.geoFire.firebaseRef queryOrderedByChild:@"g"] queryStartingAtValue:query.startValue]
+            queryEndingAtValue:query.endValue] queryLimitedToLast:20];
 }
 
 - (void)updateLocationInfo:(CLLocation *)location
